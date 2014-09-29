@@ -1,1 +1,1 @@
-./bin/RegEx2Dot < regex.txt | dot -T png -o dfa.png
+./bin/RegEx2Dot < regex.txt | dot -T jpg -o dfa.jpg

@@ -29,6 +29,7 @@ struct DFA {
   }
   void print() {
     puts("digraph {");
+    //puts("landscape=true;");
     puts("node[shape=circle];");
     puts("START[shape=point, color=white];");
     for(size_t i = 0; i<pool.size(); i++)

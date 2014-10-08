@@ -4,6 +4,7 @@
 #include<map>
 #include<queue>
 #include<set>
+#include<sstream>
 
 using namespace std;
 
@@ -27,22 +28,24 @@ struct DFA {
     assert(pool[s].trans.find(c)==pool[s].trans.end());
     pool[s].trans[c] = t;
   }
-  void print() {
-    puts("digraph {");
-    //puts("landscape=true;");
-    puts("node[shape=circle];");
-    puts("START[shape=point, color=white];");
+  string toDot() {
+    stringstream ss;
+    ss << "digraph {" << endl;
+    ss << "  node[shape=circle];" << endl;
+    ss << "  START[shape=point, color=white];" << endl;
     for(size_t i = 0; i<pool.size(); i++)
       if(pool[i].final)
-        printf("%zu[shape=doublecircle];\n", i);
-    printf("START -> %zu [label=start];\n", init);
+        ss << "  " << i << "[shape=doublecircle];" << endl;
+    ss << "  START -> " << init << " [label=start];" << endl;
     for(size_t i = 0; i<pool.size(); i++)
       for(
         map<char, size_t>::iterator j = pool[i].trans.begin();
         j!=pool[i].trans.end();
         j++)
-        printf("%zu -> %zu [label=%c];\n", i, j->second, j->first);
-    puts("}");
+        ss << "  " << i << " -> " << j->second << " [label=" << j->first << "];" << endl;
+    ss << "}" << endl;
+    string res(ss.str());
+    return res;
   }
 };
 
@@ -54,15 +57,15 @@ void closure(const NFA& nfa, set<size_t>& req) {
     size_t u = q.front();
     q.pop();
     map<char, set<size_t> >::const_iterator x = nfa.pool[u].trans.find(0);
-    if(x!=nfa.pool[u].trans.end())
-      for(
-        set<size_t>::const_iterator i = x->second.begin();
+    if(x==nfa.pool[u].trans.end())
+      continue;
+    for(set<size_t>::const_iterator i = x->second.begin();
         i!=x->second.end();
         i++)
-        if(req.find(*i)==req.end()) {
-          req.insert(*i);
-          q.push(*i);
-        }
+      if(req.find(*i)==req.end()) {
+        req.insert(*i);
+        q.push(*i);
+      }
   }
 }
 
@@ -93,8 +96,8 @@ template<class I> void regEx2NFA(NFA& nfa, size_t s, size_t t, I lo, I hi) {
         ++_;
         break;
       case ')':
+        assert(_);
         --_;
-        assert(_>=0);
         break;
       case '|':
         if(!_)
@@ -166,11 +169,10 @@ void determinize(DFA& dfa, const NFA& nfa) {
     q.pop();
     inQ[u1] = 0;
     for(set<size_t>::iterator i = u0.begin(); i!=u0.end(); ++i)
-      for(
-        map<char, set<size_t> >::const_iterator
-          j = nfa.pool[*i].trans.upper_bound(0);
-        j!=nfa.pool[*i].trans.end();
-        j++)
+      for(map<char, set<size_t> >::const_iterator
+            j = nfa.pool[*i].trans.upper_bound(0);
+          j!=nfa.pool[*i].trans.end();
+          j++)
         _[j->first].insert(j->second.begin(), j->second.end());
     for(map<char, set<size_t> >::iterator i = _.begin(); i!=_.end(); i++) {
       closure(nfa, i->second);
@@ -182,10 +184,9 @@ void determinize(DFA& dfa, const NFA& nfa) {
         m[i->second] = v1;
         q.push(i->second);
         inQ.push_back(1);
-        for(
-          set<size_t>::iterator j = i->second.begin();
-          j!=i->second.end();
-          j++)
+        for(set<size_t>::iterator j = i->second.begin();
+            j!=i->second.end();
+            j++)
           if(nfa.pool[*j].final) {
             dfa.pool.back().final = 1;
             break;
@@ -200,10 +201,9 @@ void reverse(NFA& nfa, const DFA& dfa) {
   nfa.init.clear();
   nfa.pool.assign(dfa.pool.size(), NFA::State());
   for(size_t i = 0; i<dfa.pool.size(); i++) {
-    for(
-      map<char, size_t>::const_iterator j = dfa.pool[i].trans.begin();
-      j!=dfa.pool[i].trans.end();
-      j++)
+    for(map<char, size_t>::const_iterator j = dfa.pool[i].trans.begin();
+        j!=dfa.pool[i].trans.end();
+        j++)
       nfa.insert(j->second, j->first, i);
     if(dfa.pool[i].final)
       nfa.init.insert(i);
@@ -221,11 +221,26 @@ template<class I> void regEx2DFA(DFA& dfa, I lo, I hi) {
   determinize(dfa, nfa);
 }
 
+char s[1000];
+
+extern "C" {
+
+  char* regEx2Dot(char* regEx) {
+    DFA dfa;
+    regEx2DFA(dfa, regEx, regEx+strlen(regEx));
+    string res = dfa.toDot();
+    strcpy(s, res.c_str());
+    return s;
+  }
+
+}
+
 int main(int argc, char **argv) {
   string s;
   DFA dfa;
   cin>>s;
   regEx2DFA(dfa, s.begin(), s.end());
-  dfa.print();
+  s = dfa.toDot();
+  cout<<s<<endl;
   return 0;
 }

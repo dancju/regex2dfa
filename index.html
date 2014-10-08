@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="assert/main.css">
+    <script src="assert/viz.js"></script>
+    <script src="assert/jquery-2.1.1.min.js"></script>
+    <script src="assert/RegEx2Dot.js"></script>
+    <script>
+var draw = function() {
+  var dot = Module.ccall('regEx2Dot', 'string', ['string'], [$("#regex").val()]);
+  $("#dfa").html(Viz(dot, "svg"));
+};
+    </script>
+  </head>
+  <body>
+    <input id="regex" type="text" placeHolder="Regular expression here" onKeyPress="{ if(event.keyCode===13) draw(); }"></input>
+    <div id="dfa"></div>
+  </body>
+</html>

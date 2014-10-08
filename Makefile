@@ -1,2 +1,2 @@
 all:
-	g++ src/RegEx2Dot.cpp -o bin/RegEx2Dot -Wall -O2
+	em++ src/RegEx2Dot.cpp -o assert/RegEx2Dot.js -s EXPORTED_FUNCTIONS="['_regEx2Dot']"

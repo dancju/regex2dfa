@@ -1,0 +1,21 @@
+body { margin: 0; }
+#regex {
+  border: none;
+  border-bottom: 1px solid lightgray;
+  color: indianred;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 32px;
+  margin-top: 0;
+  position: fixed;
+  text-align: center;
+  width: 100%;
+}
+#regex:focus {
+  border-bottom: 1px solid indianred;
+  box-shadow: 0 5px 5px -5px indianred;
+  outline-style: none;
+}
+#dfa {
+  padding-top: 45px;
+  text-align: center;
+}

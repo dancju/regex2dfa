@@ -1,7 +1,7 @@
 body { margin: 0; }
 #regex {
   border: none;
-  border-bottom: 1px solid lightgray;
+  border-bottom: 1px solid indianred;
   color: indianred;
   font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
   font-size: 32px;

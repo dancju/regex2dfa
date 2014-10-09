@@ -8,9 +8,13 @@
     <script src="assert/jquery-2.1.1.min.js"></script>
     <script src="assert/RegEx2Dot.js"></script>
     <script>
+var regEx2Dot = Module.cwrap('regEx2Dot', 'string', ['string']);
+var dot, svg;
 var draw = function() {
-  var dot = Module.ccall('regEx2Dot', 'string', ['string'], [$("#regex").val()]);
-  $("#dfa").html(Viz(dot, "svg"));
+  dot = regEx2Dot($("#regex").val());
+  //alert(dot);
+  svg = Viz(dot, "svg");
+  $("#dfa").html(svg);
 };
     </script>
   </head>

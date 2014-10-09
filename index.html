@@ -4,31 +4,53 @@
     <meta charset="utf-8">
     <title>RegEx2DFA</title>
     <link rel="stylesheet" type="text/css" href="assert/main.css">
+    <link rel="stylesheet" type="text/css" href="assert/gh-fork-ribbon.css">
     <script src="assert/jquery-2.1.1.min.js"></script>
     <script src="assert/RegEx2Dot.js"></script>
     <script src="assert/viz.js"></script>
     <script>
+var getParameter = function(key) {
+  key = key.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+  var regex = new RegExp("[\\?&]" + key + "=([^&#]*)"),
+      results = regex.exec(location.search);
+  return results == null ? "" : decodeURIComponent(results[1]);
+}
 var regEx2Dot = Module.cwrap('regEx2Dot', 'string', ['string']);
-var dot, svg;
-var draw = function() {
-  dot = regEx2Dot($("#regex").val());
-  //console.log(dot);
-  svg = Viz(dot, "svg");
-  $("#dfa").html(svg);
-};
+var regex, dot, svg;
+$(function() {
+  if(getParameter('regex')!='') {
+    regex = getParameter('regex');
+    $('#regex').attr('value', regex);
+    dot = regEx2Dot(regex);
+    svg = Viz(dot, "svg");
+    $("#dfa").html(svg);
+    $('#getDot').attr('download', 'dfa.dot');
+    $('#getDot').attr('href', "data:text/vnd.graphviz;charset=utf-8,"+dot);
+    $('#getSvg').attr('download', 'dfa.svg');
+    $('#getSvg').attr('href', "data:image/svg+xml;charset=utf-8,"+svg);
+    $('#button').css('display', 'block');
+  }
+});
     </script>
   </head>
   <body>
-    <input id="regex" type="text" placeHolder="Regular expression here" value="(a|b)?(b|c)(c|d)*(d|e)(e|f)+(f|g)" onKeyPress="{ if(event.keyCode===13) draw(); }"></input>
+    <input id="regex" type="text" placeHolder="Regular expression here" value="(a|b)?(b|c)(c|d)*(d|e)(e|f)+(f|g)" onKeyPress="{ if(event.keyCode===13) window.location.replace(window.location.pathname+'?regex='+$('#regex').val()); }"></input>
+    <div id="button">
+      <a id="getDot">DOT</a>
+      <a id="getSvg">SVG</a>
+    </div>
     <div id="dfa">
-<i>↑ input regular expression here and press enter. ↑</i>
-<br>
-<br>
-Only concatenation, alternation (`|`), Kleene star(`*`), and metacharacters `?`, `+` are supported.
-<br>
-More features may be added in following versions.
-<br>
-Refresh the page before you draw the next DFA. This is a bug, have not been caught.
+      <i>↑ input regular expression here and press enter. ↑</i>
+      <br>
+      <br>
+      Only concatenation, alternation (`|`), Kleene star(`*`), and metacharacters `?`, `+` are supported.
+      <br>
+      More features may be added in following versions.
+    </div>
+    <div class="github-fork-ribbon-wrapper left-bottom">
+      <div class="github-fork-ribbon">
+        <a href="https://github.com/nerdDan/RegEx2DFA" target="_blank">Fork me on GitHub</a>
+      </div>
     </div>
   </body>
 </html>

@@ -16,6 +16,8 @@ body { margin: 0; }
   outline-style: none;
 }
 #dfa {
+  color: gray;
+  font-size: 29px;
   padding-top: 45px;
   text-align: center;
 }

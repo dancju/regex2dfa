@@ -2,24 +2,33 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>RegEx2DFA</title>
     <link rel="stylesheet" type="text/css" href="assert/main.css">
-    <script src="assert/viz.js"></script>
     <script src="assert/jquery-2.1.1.min.js"></script>
     <script src="assert/RegEx2Dot.js"></script>
+    <script src="assert/viz.js"></script>
     <script>
 var regEx2Dot = Module.cwrap('regEx2Dot', 'string', ['string']);
 var dot, svg;
 var draw = function() {
   dot = regEx2Dot($("#regex").val());
-  //alert(dot);
+  //console.log(dot);
   svg = Viz(dot, "svg");
   $("#dfa").html(svg);
 };
     </script>
   </head>
   <body>
-    <input id="regex" type="text" placeHolder="Regular expression here" onKeyPress="{ if(event.keyCode===13) draw(); }"></input>
-    <div id="dfa"></div>
+    <input id="regex" type="text" placeHolder="Regular expression here" value="(a|b)?(b|c)(c|d)*(d|e)(e|f)+(f|g)" onKeyPress="{ if(event.keyCode===13) draw(); }"></input>
+    <div id="dfa">
+<i>↑ input regular expression here and press enter. ↑</i>
+<br>
+<br>
+Only concatenation, alternation (`|`), Kleene star(`*`), and metacharacters '?', '+' are supported.
+<br>
+More features may be added in following versions.
+<br>
+Refresh the page before you draw the next DFA. This is a bug, have not been caught.
+    </div>
   </body>
 </html>

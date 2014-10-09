@@ -42,7 +42,7 @@ struct DFA {
         map<char, size_t>::iterator j = pool[i].trans.begin();
         j!=pool[i].trans.end();
         j++)
-        ss << "  " << i << " -> " << j->second << " [label=" << j->first << "];" << endl;
+        ss << "  " << i << " -> " << j->second << " [label=\"\\" << j->first << "\"];" << endl;
     ss << "}" << endl;
     string res(ss.str());
     return res;
@@ -86,10 +86,19 @@ template<class I> void regEx2NFA(NFA& nfa, size_t s, size_t t, I lo, I hi) {
     nfa.insert(s, *lo, t);
     return;
   }
+  if(hi-lo==2 && *lo=='\\') {
+    nfa.insert(s, *(lo+1), t);
+    return;
+  }
   I option(lo), concatenation(lo);
   size_t _ = 0;
-  for(I i = lo; i!=hi; i++)
+  for(I i = lo; i!=hi; ++i)
     switch(*i) {
+      case '\\':
+        if(!_)
+          concatenation = i;
+        ++i;
+        break;
       case '(':
         if(!_)
           concatenation = i;
@@ -103,7 +112,11 @@ template<class I> void regEx2NFA(NFA& nfa, size_t s, size_t t, I lo, I hi) {
         if(!_)
           option = i;
         break;
+      case '?':
+        break;
       case '*':
+        break;
+      case '+':
         break;
       default:
         if(!_)
@@ -130,8 +143,31 @@ template<class I> void regEx2NFA(NFA& nfa, size_t s, size_t t, I lo, I hi) {
     nfa.insert(i0, 0, i1);
     regEx2NFA(nfa, s, i0, lo, concatenation);
     regEx2NFA(nfa, i1, t, concatenation, hi);
+  } else if(*(hi-1) == '?') {
+    size_t i0 = nfa.pool.size(), i1 = nfa.pool.size()+1;
+    nfa.pool.push_back(NFA::State());
+    nfa.pool.push_back(NFA::State());
+    nfa.insert(s, 0, i0);
+    nfa.insert(s, 0, t);
+    nfa.insert(i1, 0, t);
+    regEx2NFA(nfa, i0, i1, lo, hi-1);
   } else if(*(hi-1) == '*') {
     size_t i0 = nfa.pool.size(), i1 = nfa.pool.size()+1;
+    nfa.pool.push_back(NFA::State());
+    nfa.pool.push_back(NFA::State());
+    nfa.insert(s, 0, i0);
+    nfa.insert(s, 0, t);
+    nfa.insert(i1, 0, i0);
+    nfa.insert(i1, 0, t);
+    regEx2NFA(nfa, i0, i1, lo, hi-1);
+  } else if(*(hi-1) == '+') {
+    size_t i0 = nfa.pool.size(), i1 = nfa.pool.size()+1;
+    nfa.pool.push_back(NFA::State());
+    nfa.pool.push_back(NFA::State());
+    nfa.insert(i0, 0, i1);
+    regEx2NFA(nfa, s, i0, lo, hi-1);
+    s = i1;
+    i0 = nfa.pool.size(), i1 = nfa.pool.size()+1;
     nfa.pool.push_back(NFA::State());
     nfa.pool.push_back(NFA::State());
     nfa.insert(s, 0, i0);
@@ -235,12 +271,13 @@ extern "C" {
 
 }
 
-int main(int argc, char **argv) {
+int main() {
   string s;
   DFA dfa;
-  cin>>s;
-  regEx2DFA(dfa, s.begin(), s.end());
-  s = dfa.toDot();
-  cout<<s<<endl;
+  while(cin>>s) {
+    regEx2DFA(dfa, s.begin(), s.end());
+    s = dfa.toDot();
+    cout<<s<<endl;
+  }
   return 0;
 }

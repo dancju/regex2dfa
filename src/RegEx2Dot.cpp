@@ -70,6 +70,7 @@ void closure(const NFA& nfa, set<size_t>& req) {
 }
 
 // Thompson's construction algorithm BEGIN
+
 template<class I> void regEx2NFA(NFA& nfa, I lo, I hi) {
   nfa.pool.clear();
   nfa.pool.push_back(NFA::State());

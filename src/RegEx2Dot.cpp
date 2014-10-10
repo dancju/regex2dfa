@@ -183,6 +183,8 @@ template<class I> void regEx2NFA(NFA& nfa, size_t s, size_t t, I lo, I hi) {
 
 // Thompson's construction algorithm END
 
+// Powerset construction BEGIN
+
 void determinize(DFA& dfa, const NFA& nfa) {
   map<set<size_t>, size_t> m;
   queue<set<size_t> > q;
@@ -233,6 +235,10 @@ void determinize(DFA& dfa, const NFA& nfa) {
   }
 }
 
+// Powerset construction END
+
+// Brzozowski's algorithm BEGIN
+
 void reverse(NFA& nfa, const DFA& dfa) {
   nfa.init.clear();
   nfa.pool.assign(dfa.pool.size(), NFA::State());
@@ -257,16 +263,15 @@ template<class I> void regEx2DFA(DFA& dfa, I lo, I hi) {
   determinize(dfa, nfa);
 }
 
-char s[1000];
+// Brzozowski's algorithm END
 
 extern "C" {
 
-  char* regEx2Dot(char* regEx) {
+  const char* regEx2Dot(char* regEx) {
     DFA dfa;
     regEx2DFA(dfa, regEx, regEx+strlen(regEx));
     string res = dfa.toDot();
-    strcpy(s, res.c_str());
-    return s;
+    return res.c_str();
   }
 
 }

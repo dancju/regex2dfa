@@ -15,7 +15,10 @@ struct NFA {
   };
   set<size_t> init;
   vector<State> pool;
-  void insert(size_t s, char c, size_t t) { pool[s].trans[c].insert(t); }
+  void insert(size_t s, char c, size_t t) {
+    assert(s < pool.size());
+    pool[s].trans[c].insert(t);
+  }
 };
 struct DFA {
   struct State {
@@ -25,6 +28,7 @@ struct DFA {
   size_t init;
   vector<State> pool;
   void insert(size_t s, char c, size_t t) {
+    assert(s < pool.size());
     assert(pool[s].trans.find(c)==pool[s].trans.end());
     pool[s].trans[c] = t;
   }
@@ -38,10 +42,9 @@ struct DFA {
         ss << "  " << i << "[shape=doublecircle];" << endl;
     ss << "  START -> " << init << " [label=start];" << endl;
     for(size_t i = 0; i<pool.size(); i++)
-      for(
-        map<char, size_t>::iterator j = pool[i].trans.begin();
-        j!=pool[i].trans.end();
-        j++)
+      for(map<char, size_t>::iterator j = pool[i].trans.begin();
+          j!=pool[i].trans.end();
+          j++)
         ss << "  " << i << " -> " << j->second << " [label=\"\\" << j->first << "\"];" << endl;
     ss << "}" << endl;
     string res(ss.str());

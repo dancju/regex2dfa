@@ -280,13 +280,11 @@ extern "C" {
 
 }
 
-int main() {
-  string s;
+int main (int argc, char const *argv[]) {
+  assert(argc==2);
   DFA dfa;
-  while(cin>>s) {
-    regEx2DFA(dfa, s.begin(), s.end());
-    s = dfa.toDot();
-    cout<<s<<endl;
-  }
+  regEx2DFA(dfa, argv[1], argv[1]+strlen(argv[1]));
+  string s = dfa.toDot();
+  cout<<s<<endl;
   return 0;
 }

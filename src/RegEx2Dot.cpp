@@ -1,5 +1,6 @@
 #include<cassert>
 #include<cstdio>
+#include<cstring>
 #include<iostream>
 #include<map>
 #include<queue>
@@ -51,6 +52,20 @@ struct DFA {
     return res;
   }
 };
+
+void reverse(NFA& nfa, const DFA& dfa) {
+  nfa.init.clear();
+  nfa.pool.assign(dfa.pool.size(), NFA::State());
+  for(size_t i = 0; i<dfa.pool.size(); i++) {
+    for(map<char, size_t>::const_iterator j = dfa.pool[i].trans.begin();
+        j!=dfa.pool[i].trans.end();
+        j++)
+      nfa.insert(j->second, j->first, i);
+    if(dfa.pool[i].final)
+      nfa.init.insert(i);
+  }
+  nfa.pool[dfa.init].final = 1;
+}
 
 void closure(const NFA& nfa, set<size_t>& req) {
   queue<size_t> q;
@@ -242,20 +257,6 @@ void determinize(DFA& dfa, const NFA& nfa) {
 // Powerset construction END
 
 // Brzozowski's algorithm BEGIN
-
-void reverse(NFA& nfa, const DFA& dfa) {
-  nfa.init.clear();
-  nfa.pool.assign(dfa.pool.size(), NFA::State());
-  for(size_t i = 0; i<dfa.pool.size(); i++) {
-    for(map<char, size_t>::const_iterator j = dfa.pool[i].trans.begin();
-        j!=dfa.pool[i].trans.end();
-        j++)
-      nfa.insert(j->second, j->first, i);
-    if(dfa.pool[i].final)
-      nfa.init.insert(i);
-  }
-  nfa.pool[dfa.init].final = 1;
-}
 
 template<class I> void regEx2DFA(DFA& dfa, I lo, I hi) {
   NFA nfa;

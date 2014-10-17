@@ -281,7 +281,7 @@ extern "C" {
 
 }
 
-int main (int argc, char const *argv[]) {
+int main (int argc, char** argv) {
   assert(argc==2);
   DFA dfa;
   regEx2DFA(dfa, argv[1], argv[1]+strlen(argv[1]));

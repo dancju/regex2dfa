@@ -2,7 +2,7 @@
 
 Convert regular expression to image of DFA.
 
-You can launch this at http://danc.co/RegEx2DFA/ .
+You can launch this at http://nerddan.github.io/RegEx2DFA/ .
 
 This repository is partly built on the work of
 

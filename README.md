@@ -1,6 +1,6 @@
 # RegEx2DFA
 
-Converting regulars expression to pictures of DFA.
+Converting regular expressions to pictures of DFA.
 
 This repository is partly built on the work of
 

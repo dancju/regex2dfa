@@ -1,8 +1,6 @@
 # RegEx2DFA
 
-Convert regular expression to image of DFA.
-
-You can launch this at http://nerddan.github.io/RegEx2DFA/ .
+Converting regulars expression to pictures of DFA.
 
 This repository is partly built on the work of
 

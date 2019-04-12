@@ -1,2 +1,11 @@
-all:
-	em++ src/RegEx2Dot.cpp -o assets/RegEx2Dot.js -s EXPORTED_FUNCTIONS="['_regEx2Dot']"
+CC := /usr/lib/emscripten/em++
+CFLAGS := -std=c++14 -O3
+
+SOURCES := $(wildcard src/*.cpp)
+OBJECTS := $(patsubst src/%.cpp, obj/%.o, ${SOURCES})
+
+assets/regex2dot.js: ${OBJECTS}
+	${CC} $(CFLAGS) $^ -o $@ --bind
+
+obj/%.o: src/%.cpp
+	$(CC) $(CFLAGS) -c $< -o $@

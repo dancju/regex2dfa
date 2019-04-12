@@ -1,56 +1,56 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>RegEx2DFA</title>
-    <link rel="stylesheet" type="text/css" href="assets/main.css">
-    <link rel="stylesheet" type="text/css" href="assets/gh-fork-ribbon.css">
-    <script src="assets/jquery-2.1.1.min.js"></script>
-    <script src="assets/RegEx2Dot.js"></script>
-    <script src="assets/viz.js"></script>
-    <script>
-var getParameter = function(key) {
-  key = key.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-  var regex = new RegExp("[\\?&]" + key + "=([^&#]*)"),
-      results = regex.exec(location.search);
-  return results == null ? "" : decodeURIComponent(results[1]);
-}
-var regEx2Dot = Module.cwrap('regEx2Dot', 'string', ['string']);
-var regex, dot, svg;
-$(function() {
-  if(getParameter('regex')!='') {
-    regex = getParameter('regex');
-    $('#regex').attr('value', regex);
-    dot = regEx2Dot(regex);
-    svg = Viz(dot, "svg");
-    $("#dfa").html(svg);
-    $('#getDot').attr('download', 'dfa.dot');
-    $('#getDot').attr('href', "data:text/vnd.graphviz;charset=utf-8,"+dot);
-    $('#getSvg').attr('download', 'dfa.svg');
-    $('#getSvg').attr('href', "data:image/svg+xml;charset=utf-8,"+svg);
-    $('#button').css('display', 'block');
-  }
-});
-    </script>
-  </head>
-  <body>
-    <input id="regex" type="text" placeHolder="Regular expression here" value="(a|b)?(b|c)(c|d)*(d|e)(e|f)+(f|g)" onKeyPress="{ if(event.keyCode===13) window.location.replace(window.location.pathname+'?regex='+$('#regex').val()); }"></input>
-    <div id="button">
-      <a id="getDot">DOT</a>
-      <a id="getSvg">SVG</a>
+
+<head>
+  <meta charset="utf-8">
+  <title>regex2dfa</title>
+  <link rel="stylesheet" type="text/css" href="assets/main.css">
+  <link rel="stylesheet" type="text/css" href="assets/gh-fork-ribbon.css">
+  <script src="assets/regex2dot.js"></script>
+  <script src="assets/viz.js"></script>
+  <script src="assets/lite.render.js"></script>
+  <script>
+    const viz = new Viz();
+    const render = async () => {
+      const regex = document.getElementById('regex').value;
+      const dot = Module.regex2dot(regex);
+      const svg = await viz.renderSVGElement(dot);
+      document.getElementById('dfa').innerHTML = svg.outerHTML;
+      document.getElementById('button').style.display = 'block';
+      document.getElementById('getDot').setAttribute('download', 'dfa.dot');
+      document.getElementById('getDot').setAttribute('href', 'data:text/vnd.graphviz;charset=utf-8,' + dot);
+      document.getElementById('getSvg').setAttribute('download', 'dfa.svg');
+      document.getElementById('getSvg').setAttribute('href', 'data:image/svg+xml;charset=utf-8,' + svg);
+    };
+    window.onload = () => {
+      const url = new URL(window.location.href);
+      let param = url.searchParams.get('regex');
+      if (param === null)
+        param = '(a|b)?(b|c)(c|d)*(d|e)(e|f)+(f|g)';
+      document.getElementById('regex').value = param;
+    };
+  </script>
+</head>
+
+<body>
+  <input id="regex" type="text" placeholder="regular expression here"
+    onkeypress="if(event.keyCode===13) render()"></input>
+  <div id="button">
+    <a id="getDot">DOT</a>
+    <a id="getSvg">SVG</a>
+  </div>
+  <div id="dfa">
+    ⇪ <i>input regular expression here and press enter.</i> ⇪
+    <br>
+    <br>
+    Only concatenation, alternation (<code>|</code>), Kleene star(<code>*</code>), and metacharacters <code>?</code>,
+    <code>+</code> are supported.
+  </div>
+  <div class="github-fork-ribbon-wrapper left-bottom">
+    <div class="github-fork-ribbon">
+      <a href="https://github.com/nerdDan/RegEx2DFA" target="_blank">Fork me on GitHub</a>
     </div>
-    <div id="dfa">
-      ⇪ <i>input regular expression here and press enter.</i> ⇪
-      <br>
-      <br>
-      Only concatenation, alternation (<code>|</code>), Kleene star(<code>*</code>), and metacharacters <code>?</code>, <code>+</code> are supported.
-      <br>
-      More features may be added in following versions.
-    </div>
-    <div class="github-fork-ribbon-wrapper left-bottom">
-      <div class="github-fork-ribbon">
-        <a href="https://github.com/nerdDan/RegEx2DFA" target="_blank">Fork me on GitHub</a>
-      </div>
-    </div>
-  </body>
+  </div>
+</body>
+
 </html>

@@ -44,7 +44,7 @@ template <class I> NFA NFA::from_regex(I lo, I hi) {
   nfa.get_closure(nfa.init);
   return nfa;
 }
-template NFA NFA::from_regex(char *, char *);
+template NFA NFA::from_regex(const char *, const char *);
 template NFA NFA::from_regex(string::const_iterator, string::const_iterator);
 
 template <class I> void NFA::_from_regex(size_t s, size_t t, I lo, I hi) {
@@ -147,7 +147,7 @@ template <class I> void NFA::_from_regex(size_t s, size_t t, I lo, I hi) {
     _from_regex(s, t, lo + 1, hi - 1);
   }
 }
-template void NFA::_from_regex(size_t, size_t, char *, char *);
+template void NFA::_from_regex(size_t, size_t, const char *, const char *);
 template void NFA::_from_regex(size_t, size_t, string::const_iterator,
                                string::const_iterator);
 

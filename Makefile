@@ -1,4 +1,4 @@
-CC := /usr/lib/emscripten/em++
+CC := em++
 CFLAGS := -std=c++14 -O3
 
 SOURCES := $(wildcard src/*.cpp)

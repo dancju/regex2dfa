@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
@@ -14,8 +14,8 @@
     const render = async () => {
       const regex = document.getElementById('regex').value;
       const dot = Module.regex2dot(regex);
-      const svg = await viz.renderSVGElement(dot);
-      document.getElementById('dfa').innerHTML = svg.outerHTML;
+      const svg = (await viz.renderSVGElement(dot)).outerHTML;
+      document.getElementById('dfa').innerHTML = svg;
       document.getElementById('button').style.display = 'block';
       document.getElementById('getDot').setAttribute('download', 'dfa.dot');
       document.getElementById('getDot').setAttribute('href', 'data:text/vnd.graphviz;charset=utf-8,' + dot);
@@ -40,7 +40,7 @@
     <a id="getSvg">SVG</a>
   </div>
   <div id="dfa">
-    ⇪ <i>input regular expression here and press enter.</i> ⇪
+    ⇪ <em>input regular expression here and press enter.</em> ⇪
     <br>
     <br>
     Only concatenation, alternation (<code>|</code>), Kleene star(<code>*</code>), and metacharacters <code>?</code>,
@@ -48,7 +48,7 @@
   </div>
   <div class="github-fork-ribbon-wrapper left-bottom">
     <div class="github-fork-ribbon">
-      <a href="https://github.com/nerdDan/RegEx2DFA" target="_blank">Fork me on GitHub</a>
+      <a href="https://github.com/nerdDan/RegEx2DFA" rel="noopener noreferrer" target="_blank">Fork me on GitHub</a>
     </div>
   </div>
 </body>

@@ -15,6 +15,7 @@ string DFA::to_dot() const {
   stringstream ss;
   ss << "digraph {" << endl;
   ss << "  node[shape=circle];" << endl;
+  ss << "  edge[arrowhead=vee];" << endl;
   ss << "  START[shape=point, color=white];" << endl;
   for (size_t i = 0; i < pool.size(); i++)
     if (pool[i].final)
@@ -52,5 +53,5 @@ template <class I> DFA DFA::from_regex(I lo, I hi) {
                   .reverse()
                   .determinize());
 }
-template DFA DFA::from_regex(char *, char *);
+template DFA DFA::from_regex(const char *, const char *);
 template DFA DFA::from_regex(string::const_iterator, string::const_iterator);

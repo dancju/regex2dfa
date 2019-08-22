@@ -1,7 +1,7 @@
 # regex2dfa
 
-![build](https://img.shields.io/travis/com/nerdDan/regex2dfa/gh-pages.svg)
 ![license](https://img.shields.io/github/license/nerddan/regex2dfa.svg)
+![build](https://img.shields.io/github/workflow/status/nerddan/regex2dfa/main)
 
 This is a compiler that converts regular expressions to images of minimised DFA.
 
@@ -15,7 +15,3 @@ It is a pure front-end application, i.e. the server only hosts static assets whi
 1. Transforming the DFA from DOT to SVG format with the help of [Viz.js](https://github.com/mdaines/viz.js).
 
 The first two steps were implemented in C++ and compiled into WebAssembly with the help of [Emscripten](https://github.com/kripken/emscripten).
-
-## License
-
-This repository is distributed under a WTFPL.

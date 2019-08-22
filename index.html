@@ -20,7 +20,7 @@
       document.getElementById('getDot').setAttribute('download', 'dfa.dot');
       document.getElementById('getDot').setAttribute('href', 'data:text/vnd.graphviz;charset=utf-8,' + dot);
       document.getElementById('getSvg').setAttribute('download', 'dfa.svg');
-      document.getElementById('getSvg').setAttribute('href', 'data:image/svg+xml;charset=utf-8,' + svg);
+      document.getElementById('getSvg').setAttribute('href', 'data:image/svg+xml;charset=utf-8,' + escape(svg));
     };
     window.onload = () => {
       const url = new URL(window.location.href);

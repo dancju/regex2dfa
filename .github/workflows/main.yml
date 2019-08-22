@@ -1,0 +1,24 @@
+name: main
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build with Emscripten
+        run: docker run --rm -v $(pwd):/src -u $(id -u):$(id -g) emscripten/emsdk make
+      - name: Deploy to branch `gh-pages`
+        run: |
+          git config --global user.name $GITHUB_ACTOR
+          git config --global user.email $GITHUB_ACTOR@users.noreply.github.com
+          git checkout -b gh-pages
+          git add -f assets/regex2dot.{js,wasm}
+          git commit -m 'build with Emscripten'
+          git push -f origin gh-pages
